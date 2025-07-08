@@ -1,13 +1,14 @@
 use super::{
-    cvt, get_optional, prefer_snap, snap, Alignment, Constraint, ConstraintSource, Device,
-    Geometry, Partition, MOVE_DOWN, MOVE_STILL, MOVE_UP, SECT_END, SECT_START,
+    Alignment, Constraint, ConstraintSource, Device, Geometry, MOVE_DOWN, MOVE_STILL, MOVE_UP,
+    Partition, SECT_END, SECT_START, cvt, get_optional, prefer_snap, snap,
 };
 use libparted_sys::{
-    ped_constraint_any, ped_disk_add_partition, ped_disk_check as check, ped_disk_clobber,
-    ped_disk_commit as commit, ped_disk_commit_to_dev as commit_to_dev,
-    ped_disk_commit_to_os as commit_to_os, ped_disk_delete_all as delete_all,
-    ped_disk_delete_partition, ped_disk_destroy, ped_disk_duplicate, ped_disk_extended_partition,
-    ped_disk_get_flag, ped_disk_get_last_partition_num, ped_disk_get_max_partition_geometry,
+    PedDisk, PedDiskType, PedPartition, ped_constraint_any, ped_disk_add_partition,
+    ped_disk_check as check, ped_disk_clobber, ped_disk_commit as commit,
+    ped_disk_commit_to_dev as commit_to_dev, ped_disk_commit_to_os as commit_to_os,
+    ped_disk_delete_all as delete_all, ped_disk_delete_partition, ped_disk_destroy,
+    ped_disk_duplicate, ped_disk_extended_partition, ped_disk_get_flag,
+    ped_disk_get_last_partition_num, ped_disk_get_max_partition_geometry,
     ped_disk_get_max_primary_partition_count, ped_disk_get_max_supported_partition_count,
     ped_disk_get_partition, ped_disk_get_partition_alignment, ped_disk_get_partition_by_sector,
     ped_disk_get_primary_partition_count, ped_disk_is_flag_available,
@@ -15,8 +16,7 @@ use libparted_sys::{
     ped_disk_maximize_partition, ped_disk_minimize_extended_partition, ped_disk_new,
     ped_disk_new_fresh, ped_disk_next_partition, ped_disk_print, ped_disk_set_flag,
     ped_disk_set_partition_geom, ped_disk_type_check_feature, ped_disk_type_get,
-    ped_disk_type_get_next, ped_disk_type_register, ped_disk_type_unregister, PedDisk, PedDiskType,
-    PedPartition,
+    ped_disk_type_get_next, ped_disk_type_register, ped_disk_type_unregister,
 };
 use std::ffi::{CStr, CString};
 use std::io::{ErrorKind, Result};
@@ -234,17 +234,21 @@ impl<'a> Disk<'a> {
     /// Obtains the inner device from the disk.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn get_device<'b>(&self) -> Device<'b> {
-        let mut device = Device::from_ped_device((*self.disk).dev);
-        device.is_droppable = false;
-        device
+        unsafe {
+            let mut device = Device::from_ped_device((*self.disk).dev);
+            device.is_droppable = false;
+            device
+        }
     }
 
     /// Obtains the inner device from the disk, with mutable access.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn get_device_mut(&mut self) -> Device<'_> {
-        let mut device = Device::from_ped_device((*self.disk).dev);
-        device.is_droppable = false;
-        device
+        unsafe {
+            let mut device = Device::from_ped_device((*self.disk).dev);
+            device.is_droppable = false;
+            device
+        }
     }
 
     /// Obtains the constraint of the inner device.
@@ -441,7 +445,7 @@ impl<'a> Disk<'a> {
     /// Similar to `get_partition_by_sector`, but returns a raw pointer instead.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn get_partition_by_sector_raw(&self, sector: i64) -> *mut PedPartition {
-        ped_disk_get_partition_by_sector(self.disk, sector)
+        unsafe { ped_disk_get_partition_by_sector(self.disk, sector) }
     }
 
     /// Returns the partition numbered `num`.
@@ -456,7 +460,7 @@ impl<'a> Disk<'a> {
     /// Similar to `get_partition`, but returns a raw pointer instead.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn get_partition_raw(&self, num: u32) -> *mut PedPartition {
-        ped_disk_get_partition(self.disk, num as i32)
+        unsafe { ped_disk_get_partition(self.disk, num as i32) }
     }
 
     /// Get the number of primary partitions.
@@ -496,7 +500,7 @@ impl<'a> Disk<'a> {
     /// If `part` is an extended partition, it must not contain any logical partitions.
     #[allow(clippy::missing_safety_doc)]
     pub unsafe fn remove_partition(&mut self, part: *mut PedPartition) -> Result<()> {
-        cvt(ped_disk_delete_partition(self.disk, part)).map(|_| ())
+        unsafe { cvt(ped_disk_delete_partition(self.disk, part)).map(|_| ()) }
     }
 
     /// Removes a partition from the disk by the partition number.

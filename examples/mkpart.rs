@@ -9,7 +9,7 @@ use libparted::*;
 use std::env;
 use std::io;
 use std::num::ParseIntError;
-use std::process::{exit, Command, Stdio};
+use std::process::{Command, Stdio, exit};
 use std::str::{self, FromStr};
 
 enum Unit {

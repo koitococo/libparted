@@ -8,19 +8,18 @@ use std::ptr;
 use std::str;
 
 use libparted_sys::{
-    ped_constraint_any, ped_device_begin_external_access, ped_device_check, ped_device_close,
-    ped_device_end_external_access, ped_device_get, ped_device_get_constraint,
+    PedDevice, ped_constraint_any, ped_device_begin_external_access, ped_device_check,
+    ped_device_close, ped_device_end_external_access, ped_device_get, ped_device_get_constraint,
     ped_device_get_minimal_aligned_constraint, ped_device_get_minimum_alignment,
     ped_device_get_next, ped_device_get_optimal_aligned_constraint,
     ped_device_get_optimum_alignment, ped_device_is_busy, ped_device_open, ped_device_probe_all,
     ped_device_sync, ped_device_sync_fast, ped_device_write, ped_disk_clobber, ped_disk_probe,
-    PedDevice,
 };
 
-pub use libparted_sys::PedDeviceType as DeviceType;
 pub use libparted_sys::_PedCHSGeometry as CHSGeometry;
+pub use libparted_sys::PedDeviceType as DeviceType;
 
-use super::{cvt, Alignment, Constraint, ConstraintSource, DiskType, Geometry};
+use super::{Alignment, Constraint, ConstraintSource, DiskType, Geometry, cvt};
 
 pub struct Device<'a> {
     pub(crate) device: *mut PedDevice,

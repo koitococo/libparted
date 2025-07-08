@@ -1,9 +1,9 @@
-use super::{cvt, get_optional, Geometry, Timer};
+use super::{Geometry, Timer, cvt, get_optional};
 use libparted_sys::{
-    ped_file_system_alias_get_next, ped_file_system_alias_register,
-    ped_file_system_alias_unregister, ped_file_system_resize, ped_file_system_type_get,
-    ped_file_system_type_get_next, ped_file_system_type_register, ped_file_system_type_unregister,
-    PedFileSystem, PedFileSystemAlias, PedFileSystemType,
+    PedFileSystem, PedFileSystemAlias, PedFileSystemType, ped_file_system_alias_get_next,
+    ped_file_system_alias_register, ped_file_system_alias_unregister, ped_file_system_resize,
+    ped_file_system_type_get, ped_file_system_type_get_next, ped_file_system_type_register,
+    ped_file_system_type_unregister,
 };
 use std::ffi::{CStr, CString};
 use std::io;

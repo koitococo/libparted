@@ -1,13 +1,13 @@
 use super::{
-    cvt, get_optional, Constraint, ConstraintSource, Device, FileSystem, FileSystemType, Timer,
+    Constraint, ConstraintSource, Device, FileSystem, FileSystemType, Timer, cvt, get_optional,
 };
 use libparted_sys::{
-    ped_constraint_exact, ped_file_system_open, ped_file_system_probe,
+    PedGeometry, ped_constraint_exact, ped_file_system_open, ped_file_system_probe,
     ped_file_system_probe_specific, ped_geometry_check, ped_geometry_destroy,
     ped_geometry_duplicate, ped_geometry_init, ped_geometry_intersect, ped_geometry_map,
     ped_geometry_new, ped_geometry_read, ped_geometry_set, ped_geometry_set_end,
     ped_geometry_set_start, ped_geometry_sync, ped_geometry_sync_fast, ped_geometry_test_equal,
-    ped_geometry_test_inside, ped_geometry_write, PedGeometry,
+    ped_geometry_test_inside, ped_geometry_write,
 };
 use std::io;
 use std::marker::PhantomData;

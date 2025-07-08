@@ -1,12 +1,12 @@
-use super::{cvt, get_optional, Alignment, Geometry};
+use super::{Alignment, Geometry, cvt, get_optional};
 use std::io;
 use std::marker::PhantomData;
 
 use libparted_sys::{
-    ped_constraint_destroy, ped_constraint_done, ped_constraint_duplicate, ped_constraint_init,
-    ped_constraint_intersect, ped_constraint_is_solution, ped_constraint_new,
+    PedConstraint, ped_constraint_destroy, ped_constraint_done, ped_constraint_duplicate,
+    ped_constraint_init, ped_constraint_intersect, ped_constraint_is_solution, ped_constraint_new,
     ped_constraint_new_from_max, ped_constraint_new_from_min, ped_constraint_new_from_min_max,
-    ped_constraint_solve_max, ped_constraint_solve_nearest, PedConstraint,
+    ped_constraint_solve_max, ped_constraint_solve_nearest,
 };
 
 pub(crate) enum ConstraintSource {

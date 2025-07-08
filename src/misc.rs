@@ -2,11 +2,7 @@
 //! the libparted bindings as it's trivial to write them ourselves.
 
 fn abs_mod(a: i64, b: i64) -> i64 {
-    if a < 0 {
-        a % b + b
-    } else {
-        a % b
-    }
+    if a < 0 { a % b + b } else { a % b }
 }
 
 /// Rounds a number down to the closest number that is a multiple of the grain size.

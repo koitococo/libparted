@@ -107,11 +107,7 @@ pub fn prefer_snap(
 }
 
 pub(crate) fn get_optional<T>(data: *mut T) -> Option<*mut T> {
-    if data.is_null() {
-        None
-    } else {
-        Some(data)
-    }
+    if data.is_null() { None } else { Some(data) }
 }
 
 #[doc(hidden)]
