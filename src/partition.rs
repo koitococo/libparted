@@ -9,8 +9,9 @@ use std::str;
 
 use libparted_sys::{
     ped_partition_destroy, ped_partition_get_flag, ped_partition_get_name, ped_partition_get_path,
-    ped_partition_is_active, ped_partition_is_busy, ped_partition_is_flag_available,
-    ped_partition_new, ped_partition_set_flag, ped_partition_set_name, ped_partition_set_system,
+    ped_partition_get_type_uuid, ped_partition_get_uuid, ped_partition_is_active,
+    ped_partition_is_busy, ped_partition_is_flag_available, ped_partition_new,
+    ped_partition_set_flag, ped_partition_set_name, ped_partition_set_system,
     ped_partition_type_get_name, PedFileSystemType, PedGeometry, PedPartition,
 };
 
@@ -216,6 +217,28 @@ impl<'a> Partition<'a> {
             let cstr = CStr::from_ptr(ped_partition_type_get_name((*self.part).type_));
             str::from_utf8_unchecked(cstr.to_bytes())
         }
+    }
+
+    pub fn get_type_uuid(&self) -> io::Result<[u8; 16]> {
+        let r = unsafe {
+            let ptr = cvt(ped_partition_get_type_uuid(self.part))?;
+            let slice = std::slice::from_raw_parts(ptr, 16);
+            let mut r = [0u8; 16];
+            r.copy_from_slice(slice);
+            r
+        };
+        Ok(r)
+    }
+
+    pub fn get_uuid(&self) -> io::Result<[u8; 16]> {
+        let r = unsafe {
+            let ptr = cvt(ped_partition_get_uuid(self.part))?;
+            let slice = std::slice::from_raw_parts(ptr, 16);
+            let mut r = [0u8; 16];
+            r.copy_from_slice(slice);
+            r
+        };
+        Ok(r)
     }
 }
 
