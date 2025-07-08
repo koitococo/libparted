@@ -61,6 +61,7 @@ impl Default for PartitionTableType {
     }
 }
 
+#[allow(clippy::inherent_to_string)]
 impl PartitionTableType {
     pub fn to_cstring(&self) -> Option<CString> {
         match self {

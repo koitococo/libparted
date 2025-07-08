@@ -53,7 +53,7 @@ impl<'a> FileSystem<'a> {
     /// - `PED_EXCEPTION_ERROR` if the file system could not be detected.
     /// - `PED_EXCEPTION_ERROR` if the file system is bigger than its volume.
     /// - `PED_EXCEPTION_NO_FEATURE` if opening of a file system stored on `geom` is
-    ///     not implemented.
+    ///   not implemented.
     ///
     /// # Note
     ///

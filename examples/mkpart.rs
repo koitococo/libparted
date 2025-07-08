@@ -1,3 +1,5 @@
+#![allow(non_local_definitions)]
+
 extern crate failure;
 #[macro_use]
 extern crate failure_derive;

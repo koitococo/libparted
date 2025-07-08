@@ -254,7 +254,7 @@ impl<'a> Geometry<'a> {
     /// - `PED_EXCEPTION_ERROR` if the file system could not be detected.
     /// - `PED_EXCEPTION_ERROR` if the file system is bigger than its volume.
     /// - `PED_EXCEPTION_NO_FEATURE` if opening of a file system stored on `geom` is
-    ///     not implemented.
+    ///   not implemented.
     pub fn open_fs(&'_ self) -> Option<FileSystem<'_>> {
         get_optional(unsafe { ped_file_system_open(self.geometry) }).map(FileSystem::from_raw)
     }

@@ -44,7 +44,10 @@ fn main() {
     };
 
     // Creates a new partition table on the device while opening the disk.
-    let mut disk = match Disk::new_fresh(&mut dev, DiskType::get("msdos").unwrap()) {
+    let mut disk = match Disk::new_fresh(
+        &mut dev,
+        DiskType::from_table_type(PartitionTableType::MSDOS).unwrap(),
+    ) {
         Ok(disk) => disk,
         Err(why) => {
             eprintln!("unable to create partiton table on device: {why}");
