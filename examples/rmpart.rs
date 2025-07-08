@@ -11,7 +11,7 @@ fn main() {
         Some(path) => match Device::new(&path) {
             Ok(device) => device,
             Err(why) => {
-                eprintln!("rmpart: unable to open {}: {}", path, why);
+                eprintln!("rmpart: unable to open {path}: {why}");
                 exit(1);
             }
         },
@@ -27,7 +27,7 @@ fn main() {
         let mut disk = match Disk::new(&mut device) {
             Ok(disk) => disk,
             Err(why) => {
-                eprintln!("rmpart: unable to open disk: {}", why);
+                eprintln!("rmpart: unable to open disk: {why}");
                 exit(1);
             }
         };
@@ -37,22 +37,22 @@ fn main() {
             match arg.parse::<u32>().ok() {
                 Some(partition_id) => {
                     if let Err(why) = disk.remove_partition_by_number(partition_id) {
-                        eprintln!("rmpart: unable to add partition to removal queue: {}", why);
+                        eprintln!("rmpart: unable to add partition to removal queue: {why}");
                         continue;
                     }
                 }
-                None => eprintln!("rmpart: invalid partition id: {}", arg),
+                None => eprintln!("rmpart: invalid partition id: {arg}"),
             }
         }
 
         if let Err(why) = disk.commit() {
-            eprintln!("rmpart: unable to commit changes to disk: {}", why);
+            eprintln!("rmpart: unable to commit changes to disk: {why}");
             exit(1);
         }
     }
 
     if let Err(why) = device.sync() {
-        eprintln!("rmpart: unable to sync device changes with the OS: {}", why);
+        eprintln!("rmpart: unable to sync device changes with the OS: {why}");
         exit(1);
     }
 }

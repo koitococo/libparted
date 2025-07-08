@@ -120,10 +120,9 @@ fn mkfs(device: &str, fs: &str) -> io::Result<()> {
     if status.success() {
         Ok(())
     } else {
-        Err(io::Error::new(
-            io::ErrorKind::Other,
-            format!("mkfs for {} failed with {}", fs, status),
-        ))
+        Err(io::Error::other(format!(
+            "mkfs for {fs} failed with {status}"
+        )))
     }
 }
 
@@ -135,7 +134,7 @@ fn create_partition(
     fs: Option<String>,
 ) -> Result<(), PartedError> {
     // Get and open the device; then use that to get the geometry and disk from the device.
-    let mut dev = Device::new(&device).map_err(|why| PartedError::OpenDevice { why })?;
+    let mut dev = Device::new(device).map_err(|why| PartedError::OpenDevice { why })?;
 
     // Get the sector start / length of the new partition.
     let sector_size = dev.sector_size();
@@ -150,7 +149,7 @@ fn create_partition(
     let fs_type = match FileSystemType::get(&fs) {
         Some(fs) => fs,
         None => {
-            eprintln!("invalid fs provided: {}", fs);
+            eprintln!("invalid fs provided: {fs}");
             exit(1);
         }
     };
@@ -199,14 +198,14 @@ fn create_partition(
                 .ok_or(PartedError::FindPartition)?;
 
             let device_path = format!("{}{}", device_path.display(), new_part.num());
-            eprintln!("mkpart: formatting '{}' with '{}'", device_path, fs);
+            eprintln!("mkpart: formatting '{device_path}' with '{fs}'");
             mkfs(&device_path, &fs).map_err(|why| PartedError::FormatPartition { why })?;
         }
     }
 
     // Drop and re-open the device to obtain updated partition information.
     drop(dev);
-    let mut dev = Device::get(&device).map_err(|why| PartedError::OpenDevice { why })?;
+    let mut dev = Device::get(device).map_err(|why| PartedError::OpenDevice { why })?;
     let disk = Disk::new(&mut dev).map_err(|why| PartedError::CreateDisk { why })?;
 
     // Displays the new partition layout to the user.
@@ -216,7 +215,7 @@ fn create_partition(
         if name == "metadata" || name == "free" {
             continue;
         }
-        println!("Part: {}", part_i);
+        println!("Part: {part_i}");
         println!("    Path:   {:?}", part.get_path());
         println!("    FS:     {:?}", part.fs_type_name());
         println!("    Start:  {}", part.geom_start());
@@ -231,7 +230,7 @@ fn main() {
     let (device, start, length, fs) = match get_config(env::args().skip(1)) {
         Ok(config) => config,
         Err(why) => {
-            eprintln!("mkpart error: {}", why);
+            eprintln!("mkpart error: {why}");
             eprintln!("\tUsage: mkpart <device_path> <start_sector> <length_in_sectors> [<fs>]");
             eprintln!(
                 "\t       mkpart <device_path< <start_sector> <length_in_units>[M | MB] [<fs>]"
@@ -243,7 +242,7 @@ fn main() {
     match create_partition(&device, start, length, fs) {
         Ok(()) => (),
         Err(why) => {
-            eprintln!("mkpart: {} errored: {}", device, why);
+            eprintln!("mkpart: {device} errored: {why}");
             exit(1);
         }
     }

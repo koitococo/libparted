@@ -74,7 +74,7 @@ impl<'a> Device<'a> {
     }
 
     /// Return the type of partition table detected on `dev`
-    pub fn probe(&self) -> Option<DiskType> {
+    pub fn probe(&self) -> Option<DiskType<'_>> {
         let disk_type = unsafe { ped_disk_probe(self.device) };
         if disk_type.is_null() {
             None
@@ -103,7 +103,7 @@ impl<'a> Device<'a> {
         // Convert the supplied path into a C-compatible string.
         let os_str = path.as_ref().as_os_str();
         let cstr = CString::new(os_str.as_bytes())
-            .map_err(|err| Error::new(ErrorKind::InvalidData, format!("Inavlid data: {}", err)))?;
+            .map_err(|err| Error::new(ErrorKind::InvalidData, format!("Inavlid data: {err}")))?;
 
         // Then attempt to get the device.
         let mut device = Device::new_(cvt(unsafe { ped_device_get(cstr.as_ptr()) })?);
@@ -356,11 +356,11 @@ impl<'a> Device<'a> {
     get_geometry!(bios_geom);
 
     pub fn host(&self) -> i16 {
-        unsafe { (*self.device).host as i16 }
+        unsafe { (*self.device).host }
     }
 
     pub fn did(&self) -> i16 {
-        unsafe { (*self.device).did as i16 }
+        unsafe { (*self.device).did }
     }
 
     // TODO: arch_specific

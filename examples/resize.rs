@@ -25,7 +25,7 @@ fn main() {
     let geom = match Geometry::new(&dev, 0, dev.length() as i64) {
         Ok(geom) => geom,
         Err(why) => {
-            eprintln!("cannot create geometry: {}", why);
+            eprintln!("cannot create geometry: {why}");
             exit(1);
         }
     };
@@ -41,7 +41,7 @@ fn main() {
     match fs.resize(&geom, None) {
         Ok(()) => println!("filesystem resized"),
         Err(why) => {
-            eprintln!("cannot resize file system: {}", why);
+            eprintln!("cannot resize file system: {why}");
             exit(1);
         }
     }

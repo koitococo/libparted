@@ -15,13 +15,13 @@ fn create_and_append<'a>(
     let mut partition = match Partition::new(disk, ptype, ftype, start, end) {
         Ok(partition) => partition,
         Err(why) => {
-            eprintln!("unable to create partition: {}", why);
+            eprintln!("unable to create partition: {why}");
             exit(1);
         }
     };
 
     if let Err(why) = disk.add_partition(&mut partition, constraint) {
-        eprintln!("unable to add partition to disk: {}", why);
+        eprintln!("unable to add partition to disk: {why}");
         exit(1);
     }
 
@@ -38,7 +38,7 @@ fn main() {
     let mut dev = match Device::new(&device) {
         Ok(dev) => dev,
         Err(why) => {
-            eprintln!("unable to create device: {}", why);
+            eprintln!("unable to create device: {why}");
             exit(1);
         }
     };
@@ -47,7 +47,7 @@ fn main() {
     let mut disk = match Disk::new_fresh(&mut dev, DiskType::get("msdos").unwrap()) {
         Ok(disk) => disk,
         Err(why) => {
-            eprintln!("unable to create partiton table on device: {}", why);
+            eprintln!("unable to create partiton table on device: {why}");
             exit(1);
         }
     };
@@ -82,7 +82,7 @@ fn main() {
     );
 
     if let Err(why) = disk.commit() {
-        eprintln!("unable to commit to disk: {}", why);
+        eprintln!("unable to commit to disk: {why}");
         exit(1);
     }
 

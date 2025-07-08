@@ -11,7 +11,7 @@ fn list() -> Result<()> {
         let hw_geom = device.hw_geom();
         let bios_geom = device.bios_geom();
 
-        println!("Device {}", dev_i);
+        println!("Device {dev_i}");
         println!("    Model:         {:?}", device.model());
         println!("    Path:          {:?}", device.path());
         println!("    Sectors:       {}", device.length());
@@ -55,7 +55,7 @@ fn list() -> Result<()> {
 
 fn main() {
     if let Err(err) = list() {
-        eprintln!("list: failed to list: {}", err);
+        eprintln!("list: failed to list: {err}");
         process::exit(1);
     }
 }

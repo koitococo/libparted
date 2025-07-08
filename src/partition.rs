@@ -62,7 +62,7 @@ impl<'a> Partition<'a> {
         unsafe { (*self.part).num }
     }
 
-    pub fn fs_type_name(&'a self) -> Option<&str> {
+    pub fn fs_type_name(&'a self) -> Option<&'a str> {
         unsafe {
             let fs_type = (*self.part).fs_type;
             if fs_type.is_null() {
@@ -194,7 +194,7 @@ impl<'a> Partition<'a> {
     /// after `Partition::set_name()` is called.
     pub fn set_name(&mut self, name: &str) -> io::Result<()> {
         let name_cstring = CString::new(name).map_err(|err| {
-            io::Error::new(io::ErrorKind::InvalidData, format!("Inavlid data: {}", err))
+            io::Error::new(io::ErrorKind::InvalidData, format!("Inavlid data: {err}"))
         })?;
         let name_ptr = name_cstring.as_ptr();
         cvt(unsafe { ped_partition_set_name(self.part, name_ptr) }).map(|_| ())

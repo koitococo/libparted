@@ -98,19 +98,19 @@ impl<'a> Constraint<'a> {
         Ok(())
     }
 
-    pub fn start_align(&self) -> Alignment {
+    pub fn start_align(&self) -> Alignment<'_> {
         Alignment::from_raw(unsafe { (*self.constraint).start_align })
     }
 
-    pub fn end_align(&self) -> Alignment {
+    pub fn end_align(&self) -> Alignment<'_> {
         Alignment::from_raw(unsafe { (*self.constraint).end_align })
     }
 
-    pub fn start_range(&self) -> Geometry {
+    pub fn start_range(&self) -> Geometry<'_> {
         Geometry::from_raw(unsafe { (*self.constraint).start_range })
     }
 
-    pub fn end_range(&self) -> Geometry {
+    pub fn end_range(&self) -> Geometry<'_> {
         Geometry::from_raw(unsafe { (*self.constraint).end_range })
     }
 

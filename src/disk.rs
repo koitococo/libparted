@@ -23,7 +23,6 @@ use std::io::{ErrorKind, Result};
 use std::marker::PhantomData;
 use std::ptr;
 use std::str;
-use std::string::ToString;
 
 pub use libparted_sys::_PedDiskFlag as DiskFlag;
 pub use libparted_sys::_PedDiskTypeFeature as DiskTypeFeature;
@@ -241,7 +240,7 @@ impl<'a> Disk<'a> {
 
     /// Obtains the inner device from the disk, with mutable access.
     #[allow(clippy::missing_safety_doc)]
-    pub unsafe fn get_device_mut(&mut self) -> Device {
+    pub unsafe fn get_device_mut(&mut self) -> Device<'_> {
         let mut device = Device::from_ped_device((*self.disk).dev);
         device.is_droppable = false;
         device
@@ -301,7 +300,7 @@ impl<'a> Disk<'a> {
         }
     }
 
-    pub fn parts(&self) -> DiskPartIter {
+    pub fn parts(&self) -> DiskPartIter<'_> {
         DiskPartIter(self, ptr::null_mut())
     }
 
@@ -322,7 +321,7 @@ impl<'a> Disk<'a> {
     pub fn get_last_partition_num(&self) -> Option<u32> {
         match unsafe { ped_disk_get_last_partition_num(self.disk) } {
             -1 => None,
-            num => Some(num.abs() as u32),
+            num => Some(num.unsigned_abs()),
         }
     }
 
@@ -333,7 +332,7 @@ impl<'a> Disk<'a> {
             if supported < 0 {
                 None
             } else {
-                Some(supported.abs() as u32)
+                Some(supported.unsigned_abs())
             }
         } else {
             None
@@ -404,7 +403,7 @@ impl<'a> Disk<'a> {
     }
 
     // Obtains the extended partition from the disk, if it exists.
-    pub fn extended_partition(&self) -> Option<Partition> {
+    pub fn extended_partition(&self) -> Option<Partition<'_>> {
         get_optional(unsafe { ped_disk_extended_partition(self.disk) }).map(|part| {
             let mut partition = Partition::from(part);
             partition.is_droppable = false;

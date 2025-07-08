@@ -28,11 +28,11 @@ impl<'a> FileSystem<'a> {
         unsafe { (*self.fs).checked != 0 }
     }
 
-    pub fn geom(&mut self) -> Geometry {
+    pub fn geom(&'_ mut self) -> Geometry<'_> {
         Geometry::from_raw(unsafe { (*self.fs).geom })
     }
 
-    pub fn type_(&mut self) -> FileSystemType {
+    pub fn type_(&mut self) -> FileSystemType<'_> {
         FileSystemType::from_raw(unsafe { (*self.fs).type_ })
     }
 
@@ -115,7 +115,7 @@ impl<'a> FileSystemAlias<'a> {
         }
     }
 
-    pub fn iter(&self) -> FileSystemAliasIter {
+    pub fn iter(&self) -> FileSystemAliasIter<'_> {
         FileSystemAliasIter(self, ptr::null_mut())
     }
 
@@ -149,7 +149,7 @@ impl<'a> FileSystemType<'a> {
         }
     }
 
-    pub fn iter(&self) -> FileSystemTypeIter {
+    pub fn iter(&self) -> FileSystemTypeIter<'_> {
         FileSystemTypeIter(self, ptr::null_mut())
     }
 

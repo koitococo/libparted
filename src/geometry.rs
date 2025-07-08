@@ -29,7 +29,7 @@ impl<'a> Geometry<'a> {
     }
 
     /// Return a constraint that only the given region will satisfy.
-    pub fn exact(&self) -> Option<Constraint> {
+    pub fn exact(&self) -> Option<Constraint<'_>> {
         get_optional(unsafe { ped_constraint_exact(self.geometry) }).map(|constraint| Constraint {
             constraint,
             source: ConstraintSource::New,
@@ -77,11 +77,11 @@ impl<'a> Geometry<'a> {
         }
     }
 
-    pub fn dev(&self) -> Device {
+    pub fn dev(&self) -> Device<'_> {
         unsafe { Device::from_ped_device((*self.geometry).dev) }
     }
 
-    pub fn dev_mut(&mut self) -> Device {
+    pub fn dev_mut(&mut self) -> Device<'_> {
         unsafe { Device::from_ped_device((*self.geometry).dev) }
     }
 
@@ -255,7 +255,7 @@ impl<'a> Geometry<'a> {
     /// - `PED_EXCEPTION_ERROR` if the file system is bigger than its volume.
     /// - `PED_EXCEPTION_NO_FEATURE` if opening of a file system stored on `geom` is
     ///     not implemented.
-    pub fn open_fs(&self) -> Option<FileSystem> {
+    pub fn open_fs(&'_ self) -> Option<FileSystem<'_>> {
         get_optional(unsafe { ped_file_system_open(self.geometry) }).map(FileSystem::from_raw)
     }
 
@@ -264,7 +264,7 @@ impl<'a> Geometry<'a> {
     /// This function tries to be clever at dealing with ambiguous situations, such as
     /// when one file system was not completely erased before a new file system was created on
     /// on top of it.
-    pub fn probe_fs(&self) -> io::Result<FileSystemType> {
+    pub fn probe_fs(&'_ self) -> io::Result<FileSystemType<'_>> {
         cvt(unsafe { ped_file_system_probe(self.geometry) }).map(FileSystemType::from_raw)
     }
 
